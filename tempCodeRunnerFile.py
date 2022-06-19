@@ -1,0 +1,1 @@
+ if 'email' in session:

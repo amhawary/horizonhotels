@@ -1,0 +1,67 @@
+{% extends "HHtemp.html" %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block extended %}
+    <section>
+    <br>
+        <h1 style="color: #40759F; font-size: larger;">LOCATIONS</h1>
+    <br> 
+
+    <div class="container">
+
+        {% for city in hotels %}
+        <div class="places" onclick = "showPopup(this,{{ranges}})" id = {{city[0]}}>
+            <h2>{{city[0]}}</h2>
+            <img src="/static/{{city[0]}}.jpg">
+        </div>
+    
+        <div class="expmodal" id = {{'HH' + city[0]}}>
+            <div class="expmodal-content">
+            <span class="close" onclick="document.getElementById(this.parentElement.parentElement.id).style.display = 'none'">&times;</span>
+            
+            <div><h2 style = "color: #000000">{{city[0]}}{% if city[7] == 1 %}(Featured){% endif %}</h2></div>
+            <img style = "width: 50%; height: auto" src="/static/{{city[0] + '2'}}.jpg">
+            <div style = "width: 100%"><h3 style = "color: #000000">{{city[5]}}, {{city[4]}}<h3>
+            <p style = "color: #000000">{{city[6]}}</p>
+            <h3 style = "color: #000000">Price Range: {{ranges[city[0]]}}</h3></div>
+            <br>
+            <h3 style = "color: #000000" class = "newbutton"><a href = "/booking">GO TO BOOKING</a></h3>
+            </div>
+        </div>
+    {% endfor %}
+    </div>   
+    <br><br><br>
+    <h1 style="color: #40759F; font-size: larger;">ROOMS</h1>  
+    <br>
+    <div class="container">
+     {% for room in types%}
+        <div class="places" onclick = "showPopup(this)" id = {{room[0]}}>
+            <h2>{{room[0]}}</h2>
+            <img src="/static/room_{{room[0]}}.jpg">
+        </div>
+        <div class="expmodal"  id = {{"HH" + room[0]}} >
+            <div class="expmodal-content">
+                <span class="close" onclick="document.getElementById(this.parentElement.parentElement.id).style.display = 'none'">&times;</span>
+                <br>
+                <h3 style = "color: #000000" class = "newbutton"><a href = "/booking">GO TO BOOKING</a></h3>
+                </div>
+        </div>
+     {% endfor %}
+     </div>
+    </section>
+     </body>
+     <script>
+         function showPopup(name,ranges) {
+            var newid 
+            console.log("bruh")
+            newid = 'HH' + name.id
+            console.log(newid)
+
+            x = document.getElementById(newid)
+            x.style.display = "block"
+            window.scrollTo(0, 0);
+         }
+     </script>
+{% endblock %}
+

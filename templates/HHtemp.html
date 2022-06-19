@@ -1,0 +1,92 @@
+<html>
+
+<head>
+    <title>Horizon Hotels</title>
+    <link rel="stylesheet" type="text/css" href= '/static/HH.css'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .places:hover {
+            transform: scale(1.05);
+        }
+
+        .arrowbox {
+            padding-left: 5px; display:flex; align-items:center; text-align: center ;justify-content: center; width:99%;
+        }
+
+        @media screen and (min-width: 750px) {
+            .arrowbox {
+                display: none;
+            }
+            .navbox {
+                flex-wrap: wrap;
+            }    
+            .nav {
+            border: solid 4px #ffffff;
+            height: 45px;
+            width: 13%;
+            }
+            .bookingContainer {
+            flex-wrap: wrap;
+            }    
+            .booking {
+            width: 20%;
+            }
+        }
+
+        @media screen and (min-width: 1000px) {
+            .nav {
+            width: 10%;
+            }
+            
+        }
+        
+    </style>
+</head>
+
+<body>
+    <header>
+        <div><h1>HORIZON HOTELS</h1></div>
+        <br><br>
+        <div class = "arrowbox"><button class = "collapsible" id = "arrow" value = 1 onclick = "arrowToggle()"><h3>&#9650</h3></button></div>
+        <br><br>
+        <div class = "navbox" id = "navcontent">
+            <h3 class = "nav"><a href="/">HOME</a></h3>
+            <h3 class = "nav"><a href="/explore">EXPLORE</a></h3>
+            <h3 class = "nav"><a href="/booking">BOOKING</a></h3>
+            <h3 class = "nav"><a href="/about">ABOUT US</a></h3>
+            {% if session['email'] %}
+            <h3 class = "nav"><a href="/account">ACCOUNT</a></h3>
+            <h3 class = "nav"><a href="/logout">LOG OUT</a></h3>
+            {% if session['admin'] == 1 %}
+            <h3 class = "nav"><a href="/admin">ADMIN</a></h3>
+            {% endif %}
+            {% else %}
+            <h3 class = "nav"><a href="/login">LOG IN</a></h3>
+            <h3 class = "nav"><a href="/signup">SIGN UP</a></h3>
+            {% endif %}
+        </div>
+    </header>
+    <br>
+    {% block extended %}
+
+    {% endblock %}
+</body>
+<script>
+    function arrowToggle() {
+        var arrow = document.getElementById('arrow')
+        var content = document.getElementById('navcontent')
+        console.log('lol3')
+        if (arrow.value == 1) {
+            console.log('lol')
+            arrow.innerHTML = '&#9660'
+            content.style.display = 'none'
+            arrow.value = 0
+        } else {
+            console.log('lol2')
+            arrow.innerHTML = '&#9650'
+            content.style.display = 'flex'
+            arrow.value = 1
+        }
+    }
+</script>
+</html>

@@ -1,0 +1,83 @@
+{% extends "HHtemp.html" %}
+{% block head %}
+  {{ super() }}
+{% endblock %}          
+  {% with messages = get_flashed_messages() %}
+     {% if messages %}
+      <ul class=flashes>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+  {% endwith %}
+{% block extended %}
+ <br>
+   <section>
+    <form id = "login" action = "/login" method="POST">
+      {{ form.hidden_tag() }}
+      <h1 style = "font-size: 35px; text-align: center;width: 100%; color: #6C96B7;">LOG IN</h1>
+      {% if error %}
+        {% for err in error %}
+            <p class=error><strong>Error:</strong> {{ err }}
+        {% endfor %}
+      {% endif %}
+          <p id = "error"><strong></strong>
+      <br>
+        
+        <div style = 'width: 100%;display: flex;flex-wrap: wrap;'>
+          <div style = 'width:100%;'>
+            <h2>Enter email</h2>
+            <input id = "usermail" name = "useremail"  value = "{{request.form.useremail}}">
+          </div>
+          <div style = 'width:100%;'>
+            <h2>Enter password</h2>
+            <input type = "password" id = "pw" name = "pw"  value = "{{request.form.pw}}">
+            <br>
+            <button class = "newbutton" type="button" onclick="validateForm()">DONE</button>
+            <br><br><br>
+          </div>
+          <div style = 'width:100%;'>
+            <h2>Not registed?</h2>
+            <a class = "newbutton" href = '/signup'>SIGN UP HERE</a>
+          </div>
+        </div>      
+</form>
+<br>
+</section>
+<script type="text/javascript">
+
+  function validateForm() {
+    var email = document.getElementById('usermail');
+    var pw = document.getElementById('pw');
+    var errorElement = document.getElementById('error');
+  
+    let messages = []
+
+    if (email.value) {
+      if (validateEmail(email.value)) {messages.push("Email is invalid")}
+    } else {messages.push("Please enter email")}
+
+    if (pw.value) {}
+      else {messages.push("Please enter password")}
+  
+    if (messages.length > 0) {
+      errorElement.className = "error"
+      errorElement.innerHTML = messages.join('<br>')
+    } else document.getElementById("login").submit()
+  }
+
+  function validateEmail(mail) 
+{
+ if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail))
+  {
+    return (false)
+  }
+    return (true)
+}
+  
+   
+</script>
+</body>
+</html>  
+{% endblock %}

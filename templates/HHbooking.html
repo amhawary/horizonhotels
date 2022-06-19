@@ -1,0 +1,286 @@
+{% extends "HHtemp.html" %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+  <ul class=flashes>
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+{% endwith %}
+{% block extended %}
+ <br>
+   <section>
+    {% if found %}
+    <div id = "divbook">
+    <form id = "booking2" name = "booking2" action = "/" method="POST">
+    <h1 style = "font-size: 35px; text-align: center;width: 100%; color: #6C96B7;">BOOKING</h1>
+    <h2 style="color: #40759F;">Room is available</h2>
+    <h3 style="color:black">Hotel: {{session.get("choices")[0]}}</h3>
+    <h3 style="color:black">Roomtype: {{session.get("choices")[1]}}</h3>
+    <h3 style="color:black">Check In: {{session.get("choices")[2]}}</h3>
+    <h3 style="color:black">Check Out: {{session.get("choices")[3]}}</h3>
+    <h3 style="color:black">Number of guests: {{session.get("choices")[4]}}</h3>
+
+    <div class="row">
+      <div class="col-50">
+        <h3>Billing Address</h3>
+        <label for="fname"><i class="fa fa-user"></i> Full Name</label>
+        <input type="text" id="fname" name="firstname">
+        <label for="email"><i class="fa fa-envelope"></i> Email</label>
+        <input type="text" id="email" name="email">
+        <label for="adr"><i class="fa fa-address-card-o"></i> Address</label>
+        <input type="text" id="adr" name="address">
+        <label for="city"><i class="fa fa-institution"></i> City</label>
+        <input type="text" id="city" name="city">
+
+        <div class="row">
+          <div class="col-50">
+            <label for="state">State</label>
+            <input type="text" id="state" name="state">
+          </div>
+          <div class="col-50">
+            <label for="zip">Zip</label>
+            <input type="text" id="zip" name="zip">
+          </div>
+        </div>
+      </div>
+
+      <div class="col-50">
+        <h3>Payment</h3>
+        <label for="cname">Name on Card</label>
+        <input type="text">
+        <label for="ccnum">Credit card number</label>
+        <input type="text" id="ccnum" name="cardnumber">
+        <label for="expmonth">Exp Month</label>
+        <input type="text">
+        <div class="row">
+          <div class="col-50">
+            <label for="expyear">Exp Year</label>
+            <input type="text">
+          </div>
+          <div class="col-50">
+            <label for="cvv">CVV</label>
+            <input type="text">
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class = "newbutton" type="button"><a href="/booking">BACK</a></button>
+    <button class ="newbutton" type="button" onclick="document.getElementById('confirmpayment').style.display = 'block';">CHECKOUT</button>
+
+    <div class = "modal" id = "confirmpayment" style="display: none;">
+      <div class="modal-content">
+        <span class="close" onclick="document.getElementById('confirmpayment').style.display = 'none'">&times;</span>
+        <button class ="newbutton" onclick="document.getElementById('booking2').submit()" >PAY</button>
+      </div>
+      
+    </div>
+    </form>
+   </div> 
+    {% else %}
+    <form id = "booking" action = "/booking" method="POST">
+      {{ form.hidden_tag() }}
+
+      <h1 style = "font-size: 35px; text-align: center;width: 100%; color: #6C96B7;">BOOKING</h1>
+      {% if error %}
+      {% for err in error %}
+          <p class=error><strong>Error:</strong> {{ err }}
+      {% endfor %}
+      {% endif %}
+        <p id = "error"><strong></strong>
+      <br>
+     
+        <div class = "bookingContainer">
+          <div class = "booking">
+            <input name = "price" id = "price" type = "hidden">
+            <input name = "bookingDate" id = "bookingDate" type = "hidden">
+            <input name = "checkoutdate" id = "checkoutdate" type = "hidden">
+            <input name = "checkindate" id = "checkindate" type = "hidden">
+              <h2 style="color: #40759F;">City:</h2>
+              <select name="city" id = "city" value="{{session.get('choices')[0]}}" onchange = "priceUpdate({{prices}},'{{session.get('currency')}}')">
+                <option value = ""> -- Choose City -- </option>
+                {% for city in cities%}
+                <option value = {{city[3]}}>{{city[0]}}</option>
+                {% endfor %}
+              </select>
+          </div>
+          <div class = "booking">
+            <h2 style="color: #40759F;">Check in date:</h2>
+            <input  type = "date" name = "checkIn" id = "checkIn" value = "{{session.get('choices')[2]}}" onchange = "priceUpdate({{prices}},'{{session.get('currency')}}')">
+          </div>
+          <div class = "booking">
+            <h2 style="color: #40759F;">Check out date:</h2>
+            <input  type = "date" name = "checkOut" id = "checkOut" value = "{{session.get('choices')[3]}}" onchange = "priceUpdate({{prices}},'{{session.get('currency')}}')">
+          </select>
+      </div>
+        <div class = "booking">
+          <h2 style="color: #40759F;">Room type:</h2>
+            <select name="roomType" id = "roomtype" value = "{{session.get('choices')[1]}}" onchange="populate(this.id,'guests', {{types}}); priceUpdate({{prices}},'{{session.get('currency')}}')">
+            <option value = ""> -- Choose Room Type -- </option>
+            {% for room in roomtypes%}
+            <option value = {{room[0]}}>{{room[0]}}</option>
+            {% endfor %}
+          </select>
+      </div>
+    <div class = "booking">
+      <h2 style="color: #40759F;">Number of guests:</h2>
+        <select name="guests" id = "guests" value = "{{session.get('choices')[4]}}" onchange = "priceUpdate({{prices}},'{{session.get('currency')}}')" >
+      </select>
+      </div>
+      <br><br>
+     </div> 
+     <div style = 'width:100%;'>
+        <h2 id="priceshown" style=" color: #40759F;">PRICE:<br>N/A</h2>
+        </select>
+        </div>
+      <br>
+      <button class = "newbutton" type="button" onclick="validateForm1()">FIND ROOMS</button>
+            <br><br><br>
+        </form>
+        {% endif%}
+   </section>
+<script>
+  function populate(s1,s2,types)
+  {
+      var s1 = document.getElementById(s1);
+      var s2 = document.getElementById(s2);
+      s2.innerHTML = "";
+      if(types[s1.value]) {
+          var max = types[s1.value] + 1
+          for (let i = 1; i < max; i++) {
+            var newoption = document.createElement("option")
+            newoption.value = i;
+            newoption.innerHTML = i;
+            s2.options.add(newoption);
+          }
+      }
+  };
+
+ function isPeak() {
+    var date = document.getElementById('checkIn');
+    var testlol = date.value.split("-");
+    console.log(testlol)
+    if ((testlol[1] > 3) && (testlol[1] < 10)) {
+      return 1;
+    } else {return 0};
+  };
+
+  function priceUpdate(prices, currency)
+  {
+    var city = document.getElementById('city');
+    var checkin = document.getElementById('checkIn');
+    var checkout = document.getElementById('checkOut');
+    var roomtype = document.getElementById('roomtype');
+    var guests = document.getElementById('guests');
+    var price = document.getElementById('price');
+    var priceshown = document.getElementById('priceshown');
+    var temp = 0;
+    var diffTime;
+    var nights = 1;
+    var diffToday;
+    var today = new Date();
+    var date2 = new Date(checkout.value);
+    var date1 = new Date(checkin.value);
+    if (city.value && checkin.value && checkout.value && roomtype.value){
+      console.log(checkin.value,checkout.value,date1,date2)
+      if (date2 >= date1) {
+        diffTime = date2 - date1
+        console.log(diffTime)
+        if (diffTime != 0) {nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24))}
+        console.log(nights)
+        temp = nights * prices[isPeak()][city.value]
+        temp = (temp * prices[2][roomtype.value])
+        diffTime = date1 - today
+        diffToday = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+        console.log(temp)
+        console.log(diffToday)
+        console.log(prices[4])
+        if (guests.value > 1) {
+          temp = temp + (guests.value * temp * prices[4][roomtype.value])
+        }
+        if (diffToday <= 90) {
+        for (const x in prices[3]) {
+          if (diffToday >= x) {
+            console.log(prices[3][x])
+            temp = (temp * prices[3][x])
+            console.log(temp)
+        }}
+        price.value = temp.toFixed(2)
+        console.log(price)
+        if (currency == "USD")
+          {temp = temp * 1.6}
+        else if (currency == "EUR") {
+          temp = temp * 1.2
+        }
+        temp = temp.toFixed(2)
+        priceshown.innerHTML= "PRICE:<br> " + temp + " " + currency}
+        else {priceshown.innerHTML= "PRICE:<br>N/A"}
+      } else {priceshown.innerHTML= "PRICE:<br>N/A"}
+      }}
+
+  function validateForm1 () {
+    var city = document.getElementById('city');
+    var checkin = document.getElementById('checkIn');
+    var checkout = document.getElementById('checkOut');
+    var roomtype = document.getElementById('roomtype');
+    var guests = document.getElementById('guests');
+    var bookingDate = document.getElementById('bookingDate');
+    var checkindate = document.getElementById('checkindate');
+    var checkoutdate = document.getElementById('checkoutdate');
+    var temp = 0;
+    var diffTime;
+    var diffToday;
+    var nights = 1;
+    var today = new Date();
+    var date2 = new Date(checkout.value);
+    var date1 = new Date(checkin.value);
+    var errorElement = document.getElementById('error');
+    let messages = []
+
+    console.log(price)
+    if (city.value) {} else messages.push("Must choose city")
+
+    if (checkin.value) {
+        if (date1 > today) {
+        diffTime = date1 - today
+        diffToday = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+        if (diffToday >= 90) {
+          messages.push("Invalid check in date")
+        }
+        } else messages.push("Invalid check in date")
+    } else messages.push("Must pick check in date")
+
+    if (checkout.value) {
+      if (date2 > today) {
+      } else messages.push("Invalid check out date")
+    } else messages.push("Must pick check out date")
+
+    if (checkin.value && checkout.value) {
+      if (date1 > date2) {
+        messages.push("Check out cannot be before check in")
+      }
+    }
+
+    if (roomtype.value) {} else messages.push("Must choose city")
+   if (guests.value) {} else messages.push("Must choose number of guests")
+
+
+   if (messages.length > 0) {
+    errorElement.className = "error"
+    errorElement.innerHTML = messages.join('<br>') 
+  } else {
+      bookingDate.value = today.toISOString().split('T')[0]
+      console.log(bookingDate.value, checkin.value, checkout.value)
+      document.getElementById("booking").submit()}
+  }
+
+ 
+</script>
+</body>
+</html>  
+{% endblock %}
+

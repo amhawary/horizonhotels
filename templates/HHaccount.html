@@ -1,0 +1,243 @@
+{% extends "HHtemp.html" %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block extended %}
+  <section>
+    <h1 style = "font-size: 35px; text-align: center;width: 100%; color: #6C96B7;">Account</h1>             
+    {% if error %}
+            {% for err in error %}
+              <p class=error><strong>Error:</strong> {{ err }}
+            {% endfor %}
+            {% endif %}
+              <p id = "error"><strong></strong>
+
+
+    {% if page == 1 %}
+    <form id = "account1" name = "account1" action = "/account" method="POST">
+    <input id = "page" name = "page" type = "hidden">
+    <input id = "cancel" name = "cancel" type = "hidden">
+    <div id = "details">
+    <h1 style = "font-size: 25px; text-align: center; margin-left: 2%; margin-right: 2%;; color: white; background-color: #6C96B7;">Details</h1> 
+    <h2 style = "color: #40759F">Email:</h2><h3 style = "color: #000000; text-align: center">{{user[0]}}</h3> 
+    <h2 style = "color: #40759F">Name:</h2><h3 style = "color: #000000; text-align: center">{{user[2] + user[4]}}</h3>
+    <h2 style = "color: #40759F">Full Name:</h2><h3 style = "color: #000000; text-align: center">{{user[3]}}</h3> 
+    <h2 style = "color: #40759F">Phone Number:</h2><h3 style = "color: #000000; text-align: center">{% if user[1]%}{{user[1]}}{% else%}None{% endif%}</h3> 
+    <h2 style = "color: #40759F">Currency:</h2><h3 style = "color: #000000; text-align: center">{{user[7]}}</h3> 
+    <button class = "newbutton" onclick = "page(2)" >EDIT</button>
+    </div>
+
+    <div id = "bookings">
+    <h1 style = "font-size: 25px; text-align: center; margin-left: 2%; margin-right: 2%;; color: white; background-color: #6C96B7;">Bookings</h1> 
+    <h2 style = "color: #40759F">Ongoing bookings:</h2>
+    {% if current%}
+    <table>
+      <tr>
+        <th>Booking Ref</th>
+        <th>Hotel</th>
+        <th>Room Number</th>
+        <th>Roomtype</th>
+        <th>Booking Date</th>
+        <th>Check In</th>
+        <th>Check Out</th>
+        <th>Guests</th>
+        <th>Price</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    {% for booking in current %}
+      <tr id = >
+        <td>{{booking[0]}}</td>
+        <td>{{booking[6]}}</td>
+        <td>{{booking[5]}}</td>
+        <td>{{booking[7]}}</td>
+        <td>{{booking[1]}}</td>
+        <td>{{booking[2]}}</td>
+        <td>{{booking[3]}}</td>
+        <td>{{booking[9]}}</td>
+        <td>{{booking[8]}}</td>
+        <td>{{booking[13]}}</td>
+        {% if booking[13] == "Booked" %}
+        <td><h3 style = "color: black" class = "newbutton" onclick="cancel({{booking[0]}})">CANCEL</h3></td>
+      {% endif %}
+    </tr>
+      
+    {% endfor %}
+    </table>{% else %}<h3 style = "color: #000000; text-align: center">No bookings at the moment</h3>{% endif %}
+    <h2 style = "color: #40759F">Booking history:</h2>
+    {% if past %}
+    <table>
+      <tr>
+        <th>Booking Ref</th>
+        <th>Hotel</th>
+        <th>Room Number</th>
+        <th>Roomtype</th>
+        <th>Booking Date</th>
+        <th>Check In</th>
+        <th>Check Out</th>
+        <th>Guests</th>
+        <th>Price</th>
+        <th>Status</th>
+      </tr>
+    {% for booking in past %}
+    <tr id = >
+      <td>{{booking[0]}}</td>
+      <td>{{booking[6]}}</td>
+      <td>{{booking[5]}}</td>
+      <td>{{booking[7]}}</td>
+      <td>{{booking[1]}}</td>
+      <td>{{booking[2]}}</td>
+      <td>{{booking[3]}}</td>
+      <td>{{booking[9]}}</td>
+      <td>{{booking[8]}}</td>
+      <td>{{booking[13]}}</td>
+      </tr>
+    {% endfor %}</table>{% else %}<h3 style = "color: #000000; text-align: center">No complete bookings yet</h3>{% endif %}
+
+    </div>
+
+    <div id = "more">
+      <h1 style = "font-size: 25px; text-align: center; margin-left: 2%; margin-right: 2%;; color: white; background-color: #6C96B7;">More</h1> 
+      <button type = "button" class = "newbutton" onclick="document.getElementById('delete').style.display = 'block'; document.getElementById('delete').scrollIntoView();">DELETE ACCOUNT</button>
+      <div class = "expmodal" id = "delete">
+        <div class="expmodal-content">
+          <span class="close" onclick="document.getElementById('delete').style.display = 'none'">&times;</span>
+          <button type = "button" class ="newbutton" onclick="deleted()">CONFIRM</button>
+        </div></div>
+    </form>
+    {% elif page == 2 %}
+            <form id = "form" name = "account" action = "/account" method="POST">
+            <input id = "page" name = "page" type = "hidden">
+            <br>
+              <div style = 'width: 100%;display: flex;flex-wrap: wrap;'>
+                <div style = 'width:100%;'>
+                    <h2>Fullname</h2>
+                    <input type = "text" id = "fullname" name = "fullname"  value = "{{user[3]}}">
+                </div>
+                <div style = 'width:100%;'>
+                  <h2>Prefered name(s)</h2>
+                  <select name = "title" value = "{{user[2]}}">
+                      <option value="">--</option>
+                      <option value="Ms ">Ms</option>
+                      <option value="Mrs ">Mrs</option>
+                      <option value="Mr ">Mr</option>
+                      <option value="Mx ">Mx</option>
+                      <option value="Dr ">Dr</option>
+                  </select>
+                  <input type = "text" id = "prefname" name = "prefname"  value = "{{user[4]}}">
+                </div>
+                <div style = 'width:100%;'>
+                  <h2>Email</h2>
+                  <input name = "useremail" id = "usermail" value = "{{user[0]}}">
+                </div>
+                <div style = 'width:100%;'>
+                  <h2>New Password</h2>
+                  <input type = "password" name = "newpw" id= "newpw">
+                </div>
+                <div style = 'width:100%;'>
+                  <h2>Re-enter new password</h2>
+                  <input type = "password" name = "confirmnewpw" id = "confirmnewpw">
+                </div>
+                <div style = 'width:100%;'>
+                  <h2>Currency</h2>
+                  <select name = "currency" id = "currency" value = "{{user[7]}}">
+                      <option value="GBP">GBP</option>
+                      <option value="USD">USD</option>
+                      <option value="EUR">EUR</option>
+                  </select>
+                </div>
+                <div style = 'width:100%;'>
+                  <h2>Phone number</h2>
+                  <input type = "text" name = "phonenum" id = "phone"  value = "{{user[1]}}" placeolder = "(unchanged)">
+                  <br>
+                  <div id = 'curr' onload = "this.style.display = 'none'">
+                  <div style = 'width:100%;'>
+                    <h2>New Password</h2>
+                    <input type = "password" name = "currentpw" id= "currentpw">
+                  </div>
+                  <div style = 'width:100%;'>
+                    <h2>Re-enter new password</h2>
+                    <input type = "password" name = "confirmcurrentpw" id = "confirmcurrentpw">
+                  </div></div>
+                  <br>
+                  <button class = "newbutton" onclick="validateForm()">SAVE</button>
+                  <br><br><br>
+                </div>
+              </div>      
+          </form>
+    {% elif page == 3 %}
+    <form id = "form" name = "cancel2" action = "/account" method="POST">
+    <input id = "page" name = "page" value="4" type = "hidden">
+    <input name = "bookingref" value="{{cancelled[0]}}" type = "hidden">
+    <input name = "refund" value="{{cancelled[11]}}" type = "hidden">
+    <h2 id = "bookingref" value = '{{cancelled[0]}}'  style = "color: #40759F">Booking Ref</h2><h3 style = "color: #000000; text-align: center">{{cancelled[0]}}</h3> 
+    <h2 style = "color: #40759F">Booking Date</h2><h3 style = "color: #000000; text-align: center">{{cancelled[1]}}</h3>
+    <h2 style = "color: #40759F">Check In</h2><h3 style = "color: #000000; text-align: center">{{cancelled[2]}}</h3> 
+    <h2 style = "color: #40759F">Check Out</h2><h3 style = "color: #000000; text-align: center">{{cancelled[3]}}</h3> 
+    <h2 style = "color: #40759F">Room & Hotel</h2><h3 style = "color: #000000; text-align: center">{{cancelled[5]}} {{cancelled[6]}}</h3> 
+    <h2 style = "color: #40759F">Price</h2><h3 style = "color: #000000; text-align: center">{{cancelled[8]}}</h3>
+    <h2 id = "refund" value = '{{cancelled[11]}}' style = "color: #40759F">Refund</h2><h3 style = "color: #000000; text-align: center">{{cancelled[11]}}</h3> 
+    
+    <button class = "newbutton" type="button"><a href="/booking">BACK</a></button>
+    <button class ="newbutton" type="button" onclick="document.getElementById('confirmpayment').style.display = 'block';">NEXT</button>
+
+    <div class = "modal" id = "confirmpayment" style="display: none;">
+      <div class="modal-content">
+        <span class="close" onclick="document.getElementById('confirmpayment').style.display = 'none'">&times;</span>
+        <button class ="newbutton" onclick="refund()">CONFIRM</button>
+      </div>
+      
+    </div>
+    </form>
+   </div> 
+    {% else %}
+
+
+
+
+    {% endif%}
+
+  </section>
+</body>
+<script>
+  function cancel(bookingref) {
+    var cancelnum = document.getElementById('cancel')
+    var pagenum = document.getElementById('page')
+    cancelnum.value = bookingref
+    pagenum.value = 3
+    document.getElementById('account1').submit()
+  }
+
+  function deleted() {
+    var pagenum = document.getElementById('page');
+    pagenum.value = 5;
+    document.getElementById('account1').submit();
+  }
+
+  function page(x) {
+    var pagenum = document.getElementById('page')
+    pagenum.value = x
+    document.getElementById('form').submit()
+  }
+
+  function validateForm() {
+    var fullname = document.getElementById('fullname');
+    var prefname = document.getElementById('prefname');
+    var email = document.getElementById('usermail');
+    var pw = document.getElementById('pw');
+    var confepw = document.getElementById('confirmpw');
+    var errorElement = document.getElementById('error');
+
+    
+
+  }
+
+  function refund() {
+    document.getElementById('page').value = 4
+    document.getElementById('cancel2').submit()
+  }
+
+</script>
+{% endblock %}
+
+

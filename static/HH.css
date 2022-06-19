@@ -1,0 +1,273 @@
+
+@font-face {
+    font-family: Mangabey;
+    src: url(MangabeyRegular-rgqVO.otf);
+    }
+
+@font-face {
+    font-family: Nesathoberyl;
+    src: url(Nesathoberyl-BW9j3.ttf);
+    }
+
+@font-face {
+        font-family: Salma Pro Medium;
+        src: url(SalmaproMediumnarrow-VG5v6.otf);
+        }
+
+
+body {background-color: #40759F;;}
+*{
+    box-sizing: border-box;
+    margin: 0px 0px 0px 0px;
+}
+header {
+    width:  100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;}
+
+
+table {
+    margin-left: 2%; margin-right: 2%;
+    overflow-x: auto;
+    width: 96%
+}
+
+th {
+    background-color: #40759F;
+    color: white
+}
+
+
+img {
+    width: 100%; height: 400px;
+    padding: 4%;
+}
+
+section {background-color: rgb(255, 255, 255);
+    width:  100%;
+    flex: auto;}
+
+
+.nav:hover {
+    background-color: #ffffff;
+    transform: scale(1.05);
+
+}
+a { 
+    text-decoration:none; 
+    color:inherit
+}
+.boxhead a {
+    text-decoration: none;
+}
+
+.container {
+    background-color: rgb(255, 255, 255);
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+}
+
+.collapsible:hover {
+    transform: scale(2, 0.9);
+}
+.places {
+border: solid 2px #40759F;
+margin: 0.5%;
+text-align: center;
+width: 100%;
+}
+
+.nav {
+    border: solid 0px #ffffff;
+    margin: 0.5%;
+    text-align: center;
+    align-items: center;
+    align-self: center;
+    width: 100%;
+}
+
+.navbox {
+
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    align-items: center;
+    align-self: center;
+}
+
+.bookingContainer {
+    width: 98%;display: flex;flex-wrap: nowrap;border: 2px #40759F; display: flex;
+    flex-wrap: wrap; 
+}
+
+.booking {width: 100%;text-align: center;
+    align-items: center;
+    align-self: center;}
+
+.collapsible {
+    background-color: #00000000;
+    color: white;
+    border: 0px;
+    font-size: 50px;
+    align-self: center;
+    transform: scale(1.8, 0.7);
+    display:block;
+    justify-self: center;
+    cursor: pointer;
+    margin: 0;
+    position: absolute;
+}
+
+h1 {
+    font-size: 70px;
+    text-align: center;
+    align-self: center;
+    font-family: Nesathoberyl;
+    color: rgb(255, 255, 255);
+    
+}
+
+h2 {
+    font-size: auto;
+    text-align: center;
+    font-family: Mangabey;
+    text-transform: uppercase;
+}
+
+h3 {
+    font-size: auto;
+    color: #ffffff;
+    align-self: center;
+    vertical-align: center;
+}
+
+
+
+h3.nav a:hover {
+    color:#40759F;
+  }
+  
+h3.nav:hover {
+    background-color:  #ffffff;
+  }
+  
+h3.nav:hover a{
+    color:#40759F;
+  }
+
+
+.places:hover {
+    transform: scale(1.05);
+}
+
+.places.h3:hover{
+    color: rgb(255, 255, 255);
+}
+
+form {text-align: center;}
+
+p {text-align: center;}
+
+.newbutton {
+    border: solid 2px #40759F;
+    background-color: #00000000;
+    font-family: Salma Pro Medium;
+    font-size: 30px;
+    align-self: center;
+}
+
+.error {
+    background-color: #40759F;
+    color: #ffffff;
+    font-family: Salma Pro Medium;
+    text-transform: uppercase;
+    font-size: larger;
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+
+.modal {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%;
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  .modal-content {
+    background-color: #fefefe;
+    margin-top: 15%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: min-content;
+    
+}
+  
+  .expmodal {
+    display: none; /* Hidden by default */
+    position: absolute;
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  .expmodal-content {
+    overflow-y: scroll;
+    background-color: #fefefe;
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
+
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+@media screen and (max-width: 322px) {
+    .h1 {font-size: 45px;}
+}
+
+@media screen and (min-width: 586px) {
+    .container {
+        flex-wrap: wrap;
+    }
+
+    .places {
+    width: 49%;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .places {
+    width: 32%;
+    }
+    
+}

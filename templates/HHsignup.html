@@ -1,0 +1,181 @@
+{% extends "HHtemp.html" %}
+{% block head %}
+  {{ super() }}
+{% endblock %}          
+  {% with messages = get_flashed_messages() %}
+     {% if messages %}
+      <ul class=flashes>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+  {% endwith %}
+{% block extended %}
+ <br>
+   <section>
+    <form id = "signup" name = "signup" action = "/signup" method="POST">
+      {{ form.hidden_tag() }}
+      <h1 style = "font-size: 35px; text-align: center;width: 100%; color: #6C96B7;">Sign Up</h1>
+      {% if error %}
+        {% for err in error %}
+            <p class=error><strong>Error:</strong> {{ err }}
+        {% endfor %}
+      {% endif %}
+          <p id = "error"><strong></strong>
+      <br>
+        <div style = 'width: 100%;display: flex;flex-wrap: wrap;'>
+          <div style = 'width:100%;'>
+              <h2>Enter fullname</h2>
+              <input type = "text" id = "fullname" name = "fullname"  value = "{{request.form.fullname}}">
+          </div>
+          <div style = 'width:100%;'>
+            <h2>Enter preffered name(s)</h2>
+            <select name = "title" value = "{{request.form.title}}">
+                <option value="">--</option>
+                <option value="Ms ">Ms</option>
+                <option value="Mrs ">Mrs</option>
+                <option value="Mr ">Mr</option>
+                <option value="Mx ">Mx</option>
+                <option value="Dr ">Dr</option>
+            </select>
+            <input type = "text" id = "prefname" name = "prefname"  value = "{{request.form.prefname}}">
+          </div>
+          <div style = 'width:100%;'>
+            <h2>Enter email</h2>
+            <input name = "useremail" id = "usermail" value = "{{request.form.useremail}}">
+          </div>
+          <div style = 'width:100%;'>
+            <h2>Re-enter email</h2>
+            <input name = "confirmmail" id = "confirmmail" value = "{{request.form.confirmmail}}">
+          </div>
+          <div style = 'width:100%;'>
+            <h2>Enter password</h2>
+            <input type = "password" name = "pw" id= "pw" value = "{{request.form.pw}}">
+          </div>
+          <div style = 'width:100%;'>
+            <h2>Re-enter password</h2>
+            <input type = "password" name = "confirmpw" id = "confirmpw"  value = "{{request.form.confirmpw}}">
+          </div>
+          <div style = 'width:100%;'>
+            <h2>Enter currency</h2>
+            <select name = "currency" id = "currency" value = "{{request.form.currency}}">
+                <option value="GBP">GBP</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+            </select>
+          </div>
+          <div style = 'width:100%;'>
+            <h2>Enter phone number (Optional)</h2>
+            <input type = "text" name = "phonenum" id = "phone"  value = "{{request.form.username}}">
+            <br>
+            <input id = "check1" type = "checkbox">
+            <label for = 'check1'>By checking this box I confirm I am over the age of 18 and I agree to <a href = "/aboutus">privacy policy and terms of service.</a></label>
+            <button class = "newbutton" type="button" onclick="validateForm()">DONE</button>
+            <br><br><br>
+          </div>
+          <div style = 'width:100%;'>
+            <h2>Already have an account?</h2>
+            <a class = "newbutton" href = '/login'>LOG IN HERE</a>
+          </div>
+        </div>      
+</form>
+</section>
+<script type="text/javascript">
+
+
+function validateForm() {
+  var fullname = document.getElementById('fullname');
+  var prefname = document.getElementById('prefname');
+  var email = document.getElementById('usermail');
+  var confemail = document.getElementById('confirmmail');
+  var pw = document.getElementById('pw');
+  var confepw = document.getElementById('confirmpw');
+  var errorElement = document.getElementById('error');
+  var check = document.getElementById('check1');
+  let messages = []
+
+  if (fullname.value) {
+    if (fullname.value.length < 100) {
+      if (numErr(fullname.value)) {
+        messages.push("Full name invalid")
+      }
+    } else {messages.push("Full name too long")}
+  } else {messages.push("Full name must be filled out")}
+  
+  if (prefname.value) {
+    if (prefname.value.length < 20) {
+      if (numErr(prefname.value)) {
+        messages.push("Preferred name invalid")
+      }
+    } else {messages.push("Preferred name too long")}
+  }
+    else {messages.push("Preferred name must be filled out")}
+  
+  if (email.value) {
+    if (validateEmail(email.value)) {
+      if (fullname.value.length > 60) {
+        messages.push("Email is too long")
+      }
+    } else {messages.push("Email is invalid")}
+  } else {messages.push("Email must be filled out")}
+
+  if (confemail.value) {
+    if (confirmmailErr()) {messages.push("Emails do not match")}
+  } else {messages.push("Please repeat email")}
+  
+  if (pw.value) {
+    if (pw.value.length > 7) { 
+      if (pw.value.length < 31) {} else {messages.push("Password too long")}
+    } else {messages.push("Password must be at least 8 characters")}
+  } else {messages.push("Password must be filled out")}
+  
+  if (check.value) {} else {messages.push("Must agree to terms of service and be over the age of 18")}
+
+  if (confepw.value) {
+    if(confirmpwErr()) {
+      messages.push("Passwords do not match")
+    }
+  } else {messages.push("Please repeat password")}
+
+  console.log(messages)
+
+  if (messages.length > 0) {
+    errorElement.className = "error"
+    errorElement.innerHTML = messages.join('<br>')
+  } else document.getElementById("signup").submit()
+};
+
+
+function confirmmailErr() {
+        var email = document.getElementById("usermail").value
+        var confemail = document.getElementById("confirmmail").value
+        if(email != confemail) {
+            return true
+        }
+};
+
+function confirmpwErr() {
+        var pw = document.getElementById("pw").value
+        var confepw = document.getElementById("confirmpw").value
+        if(pw != confepw) {
+            return true
+}
+}
+
+function numErr(myString) {
+  return (/\d/.test(myString));
+}
+
+function validateEmail(mail) {
+ if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+   return true
+  } else {return false}
+}
+
+
+ 
+</script>
+</body>
+</html>  
+{% endblock %}

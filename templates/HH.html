@@ -1,0 +1,209 @@
+<html>
+<head>
+    <title>Horizon Hotels</title>
+    <link rel="stylesheet" type="text/css" href= '/static/HH.css'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .homeimg {
+            position: relative;
+            text-align: center;
+            color: white;
+            height:auto;
+            width: auto;
+        }
+        .homeimgtext {
+            display: none;
+            position: absolute;
+            bottom: 25px;
+            right: 16px;
+        }
+
+        .mobilemenu {
+            display: flex;flex-wrap: wrap; width: 100%;
+        }
+
+        .desktopmenu{
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 99%; 
+            padding: 5px;
+            align-self: center;
+            align-items: center;
+            display: none;
+            flex-wrap: wrap;
+            overflow-wrap: normal;
+        }
+
+        .arrowbox {
+            display:none; align-items:center; text-align: center ;justify-content: center; width:99%; padding-left: 16px;
+        }
+
+
+        h3 {
+        font-size: auto;
+        color: #ffffff;
+        }
+
+        @media screen and (min-width: 1050px) {
+            .desktopmenu {
+                display: flex;
+            }
+            .arrowbox {
+                display: flex;
+            }
+            .homeimgtext {
+                display: block;
+            }    
+            .mobilemenu {
+                display: none; 
+            }
+        }
+
+    </style>
+</head>
+<body>
+<header>
+
+
+<div class = "mobilemenu">
+    <div style="width: 100%;"><h1>HORIZON HOTELS</h1></div>
+    <br><br>
+    <div style = 'padding-left: 5px; display:flex; align-items:center; text-align: center ;justify-content: center; width:99%;'><button class = "collapsible" id = "arrow" value = 1 onclick = "arrowToggle()"><h3>&#9650</h3></button></div>
+    <br><br>    
+    <div class = "navbox" id = "navcontent">
+                        <h3 class = "nav"><a href="/">HOME</a></h3>
+                        <h3 class = "nav"><a href="/explore">EXPLORE</a></h3>
+                        <h3 class = "nav"><a href="/booking">BOOKING</a></h3>
+                        <h3 class = "nav"><a href="/about">ABOUT US</a></h3>
+                        {% if session['email'] %}
+                        <h3 class = "nav"><a href="/account">ACCOUNT</a></h3>
+                        <h3 class = "nav"><a href="/logout">LOG OUT</a></h3>
+                        {% if session['admin'] == 1 %}
+                        <h3 class = "nav"><a href="/admin">ADMIN</a></h3>
+                        {% endif %}
+                        {% else %}
+                        <h3 class = "nav"><a href="/login">LOG IN</a></h3>
+                        <h3 class = "nav"><a href="/signup">SIGN UP</a></h3>
+                        {% endif %}
+    </div>
+</div>
+<div class = "homeimg">
+    <img src = "/static/brr2.jpg" style = "height: auto; padding: 0">
+    <div class = "homeimgtext"> 
+        <h6 style = "text-align:right; color: rgb(255, 255, 255); font-size: xxx-large;">WELCOME TO <br> HORIZON HOTELS</h6>
+    </div>     
+</div>
+<div class = "desktopmenu">
+    <br><br>
+    <div class = "arrowbox"><button class = "collapsible" id = "arrow2" value = 1 onclick = "arrowToggle2()"><h3>&#9650</h3></button></div>
+    <br><br>
+    <div class = "navbox" id = "navcontent2">
+            <h3 class = "nav"><a href="/">HOME</a></h3>
+            <h3 class = "nav"><a href="/explore">EXPLORE</a></h3>
+            <h3 class = "nav"><a href="/booking">BOOKING</a></h3>
+            <h3 class = "nav"><a href="/about">ABOUT US</a></h3>
+            {% if session['email'] %}
+            <h3 class = "nav"><a href="/account">ACCOUNT</a></h3>
+            <h3 class = "nav"><a href="/logout">LOG OUT</a></h3>
+            {% if session['admin'] == 1 %}
+            <h3 class = "nav"><a href="/admin">ADMIN</a></h3>
+            {% endif %}
+            {% else %}
+            <h3 class = "nav"><a href="/login">LOG IN</a></h3>
+            <h3 class = "nav"><a href="/signup">SIGN UP</a></h3>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% if paid %}
+
+<div class = "modal" id = "confirmpayment" style="display: block;">
+    <div class="modal-content">
+      <span class="close" onclick="document.getElementById('confirmpayment').style.display = 'none'">&times;</span>
+      <img src = "/static/success.jpg" style="height: auto; width: auto;">
+      <h3 style="color: black">Booking Reference: {{session.get('bookingref')}}</h3>
+    </div>
+</div>
+
+{% endif %}
+</header>
+<section>
+
+    <div class="container">
+
+        {% for city in hotels %}
+        <div class="places" onclick = "showPopup(this,{{ranges}})" id = {{city[0]}}>
+            <h2>{{city[0]}}</h2>
+            <img src="/static/{{city[0]}}.jpg">
+        </div>
+    
+        <div class="expmodal" id = {{'HH' + city[0]}}>
+            <div class="expmodal-content">
+            <span class="close" onclick="document.getElementById(this.parentElement.parentElement.id).style.display = 'none'">&times;</span>
+            
+            <div><h2 style = "color: #000000">{{city[0]}}{% if city[7] == 1 %}(Featured){% endif %}</h2></div>
+            <img style = "width: 50%; height: auto" src="/static/{{city[0] + '2'}}.jpg">
+            <div style = "width: 100%"><h3 style = "color: #000000">{{city[5]}}, {{city[4]}}<h3>
+            <p style = "color: #000000">{{city[6]}}</p>
+            <h3 style = "color: #000000">Price Range: {{ranges[city[0]]}}</h3></div>
+            <br>
+            <h3 style = "color: #000000" class = "newbutton"><a href = "/booking">GO TO BOOKING</a></h3>
+            </div>
+        </div>
+    {% endfor %}
+    </div>   
+    <br><br><br>
+    <h3 style = "color: black" class = 'newbutton'><a href = '/explore'>VIEW MORE</a></h3>
+</div> 
+    <br>
+</section>
+<script>
+    function arrowToggle() {
+        var arrow = document.getElementById('arrow')
+        var content = document.getElementById('navcontent')
+        console.log('lol3')
+        if (arrow.value == 1) {
+            console.log('lol')
+            arrow.innerHTML = '&#9660'
+            content.style.display = 'none'
+            arrow.value = 0
+        } else {
+            console.log('lol2')
+            arrow.innerHTML = '&#9650'
+            content.style.display = 'block'
+            arrow.value = 1
+        }
+    }
+
+    function arrowToggle2() {
+        var arrow = document.getElementById('arrow2')
+        var content = document.getElementById('navcontent2')
+        console.log('lol3')
+        if (arrow.value == 1) {
+            console.log('lol')
+            arrow.innerHTML = '&#9660'
+            content.style.display = 'none'
+            arrow.value = 0
+        } else {
+            console.log('lol2')
+            arrow.innerHTML = '&#9650'
+            content.style.display = 'block'
+            arrow.value = 1
+        }
+    }
+
+    function showPopup(name,ranges) {
+            var newid 
+            console.log("bruh")
+            newid = 'HH' + name.id
+            console.log(newid)
+
+            x = document.getElementById(newid)
+            x.style.display = "block"
+            window.scrollTo(0, 0);
+         }
+</script>
+</body>
+</html>
+
